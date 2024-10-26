@@ -1,13 +1,23 @@
 version: "3.10"
+
 services:
   app:
-    image: nginx:alpine
+    image: ghcr.io/${IMAGE_REPO}:${RELEASE_VERSION}
     restart: always
     ports:
-      - "5000:80"
+      - "80:80"
+    container_name: ${IMAGE_REPO}-app
     environment:
       VIRTUAL_HOST: ${HOST_DOMAIN}
       LETSENCRYPT_HOST: ${HOST_DOMAIN}
       LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
     volumes:
-      - ./html:/usr/share/nginx/html:ro
+      - app-html:/usr/share/nginx/html:ro
+
+networks:
+  default:
+    external: true
+    name: nginx # Réseau NGINX
+
+volumes:
+  app-html:
