@@ -2,14 +2,16 @@ name: Release
 permissions:
   packages: write
   contents: write
+
 on:
   release:
     types: [published]
   workflow_run:
     workflows: ["Build"]
-    branches: [main, master]
-    types:
-      - completed
+    types: [completed]
+  push:
+    branches:
+      - main
   workflow_dispatch:
     inputs:
       version:
@@ -92,7 +94,6 @@ jobs:
       - name: Créer un fichier .env
         run: |
           echo "Génération du fichier .env"
-
           echo "# Fichier .env autogénéré" > .env
           echo "HOST_DOMAIN=${{ secrets.DEPLOY_HOST }}" >> .env
           echo "LETSENCRYPT_EMAIL=${{ secrets.LETSENCRYPT_EMAIL }}" >> .env
