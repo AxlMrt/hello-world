@@ -1,6 +1,7 @@
+version: "3.10"
 services:
   app:
-    build: .
+    image: nginx:alpine
     restart: always
     ports:
       - "5000:80"
@@ -9,13 +10,4 @@ services:
       LETSENCRYPT_HOST: ${HOST_DOMAIN}
       LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
     volumes:
-      - app-html:/usr/share/nginx/html
-  app-migration:
-    build: .
-    restart: "no"
-    profiles:
-      - migration
-    command: echo "Running migration tasks..."
-
-volumes:
-  app-html:
+      - ./html:/usr/share/nginx/html:ro
