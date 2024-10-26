@@ -1,4 +1,4 @@
-version: "3.10"
+version: "3.9"
 services:
   app:
     image: ghcr.io/${IMAGE_REPO}:${RELEASE_VERSION}
@@ -11,12 +11,17 @@ services:
       LETSENCRYPT_HOST: ${HOST_DOMAIN}
       LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
     volumes:
-      - app-html:/usr/share/nginx/html:ro
+      - app-mydb:/app/App_Data
 
-networks:
-  default:
-    external: true
-    name: nginx
+  app-migration:
+    image: ghcr.io/${IMAGE_REPO}:${RELEASE_VERSION}
+    restart: "no"
+    container_name: ${IMAGE_REPO}-app-migration
+    profiles:
+      - migration
+    command: --AppTasks=migrate
+    volumes:
+      - app-mydb:/app/App_Data
 
 volumes:
-  app-html:
+  app-mydb:
